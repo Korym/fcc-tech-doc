@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="style.css">
+    <title>fcc Technical Document Project</title>
+  </head>
+
+  <body>
+    <nav id="navbar">
+      <header id="nav-header">Python<br>Function Decorators</header>
+      <a href="#Intro_to_Decorators"
+         class="nav-link">Intro to Decorators</a>
+      <a href="#Decorators_As_Functions"
+         class="nav-link">Decorators As Functions</a>
+      <a href="#Decorator_Functions_Using_the_'@'_Symbol"
+         class="nav-link">Decorator Functions Using the '@' Symbol</a>
+      <a href="#Decorators_with_Different_Signatures"
+         class="nav-link">Decorators with Different Signatures</a>
+      <a href="#Preserving_the_Decorated_Function's_Metadata"
+         class="nav-link">Preserving the Decorated Function's Metadata</a>
+      <a href="#Using_A_Decorator_With_Arguments"
+         class="nav-link">Using A Decorator With Arguments</a>
+      <a href="#References"
+         class="nav-link">References</a>
+    </nav>
+    <main id="main-doc">
+
+      <section class="main-section"
+               id="Intro_to_Decorators">
+        <header>
+          <h2>Intro to Decorators</h2>
+        </header>
+        <p>Added to the Python language in version 2.4 <a
+             href="https://docs.python.org/3/whatsnew/2.4.html?highlight=PEP318#pep-318-decorators-for-functions-and-methods"
+             target="_blank"
+             rel="noopener noreferrer">PEP 318: Decorators for Functions and Methods</a>, a <dfn
+               title="decorator">decorator</dfn> is a function that wraps (or returns) another function, usually used
+          for enhancing the wrapped function's behavior.
+        </p>
+        <p>The decorator was added because developers were requesting easier access to create static methods and
+          class
+          methods. </p>
+        <p>Decorators are usually applied using a special decorator <code>@wrapper</code> <a href="#symbol">syntax</a>,
+          though it isn't necessary.
+        </p>
+      </section>
+      <section class="main-section"
+               id="Decorators_As_Functions">
+        <header>
+          <h2>Decorators As Functions</h2>
+        </header>
+        <p>A decorator is an example of a higher-order function. It takes another function as an argument and then
+          wither returns that same fuction modified, or returns another object that is a result of the decorator
+          function and the modified function.</p>
+        <p>The following is an example of a decorator function and a function to be modified:</p>
+        <pre class="code">
+            <code id="decorator_function">
+    >>> def decorator(fn):
+    ...     def wrapped():
+    ...         print("Inside the decorator function")
+    ...         fn() #call the passed in function
+    ...         print("Still inside the decorator function")
+    ...     return wrapped
+
+    >>> def decorated():
+    ...      print("Calling the decorated function")
+            </code>
+          </pre>
+        <p>As seen in the above example, a decorator function (in this case <code>decorator()</code>) accepts a
+          seperate function, the decorat<em>ed</em> function <code>decorated()</code>. The decorator contains another
+          function that is a wrapped function that modifies the decorated function. It's important to understand that
+          the decorator function returns a function object which still needs to be executed later.</p>
+        <p>
+          Calling decorated() prints out it's message.
+        <pre class="code">
+            <code>
+    >>> decorated()
+    Calling the decorated function
+            </code>
+          </pre>
+        </p>
+        <p>
+          Calling decorator with decorated as the argument just returns a function object.
+        <pre class="code">
+            <code>
+    >>> decorator(decorated)
+    < function decorator.< locals>.wrapped at 0x000001B62CA131C0>
+            </code>
+          </pre>
+        </p>
+        <p>
+          decorator() needs to be called and saved to a variable, usually named the same as the function, and then
+          called
+          as a function.
+        <pre class="code">
+            <code>
+    >>> decorated = decorator(decorated)
+    >>> decorated()
+    Inside the decorator function
+    Calling the decorated function
+    Still inside the decorator function
+            </code>
+          </pre>
+        </p>
+
+      </section>
+      <section class="main-section"
+               id="Decorator_Functions_Using_the_'@'_Symbol">
+        <header>
+          <h2>Decorator Functions Using the '@' Symbol</h2>
+        </header>
+        <p>While assigning a function to a variable and calling the variable is obviously valid code, there is a more
+          common way to decorate a function. Use the '@' symbol and the decorator function name above the function to be
+          decorated.
+        <pre class="code">
+            <code>
+    >>> @decorator
+    ... def decorated():
+    ...     print("Calling the decorated function")
+          </code>
+        </pre>
+        </p>
+        <p>
+          Now all that needs to be done is to call the decorated() function, and the rest is done automatically.
+        <pre class="code">
+            <code>
+    >>> decorated()
+    Inside the decorator function
+    Calling the decorated function
+    Still inside the decorator function
+            </code>
+          </pre>
+        </p>
+        <p>
+          Using this format is considered "syntactic sugar", meaning this is just an easier way to do the same thing,
+          plus it looks better and is easier to read.
+        </p>
+
+      </section>
+      <section class="main-section"
+               id="Decorators_with_Different_Signatures">
+        <header>
+          <h2>Decorators with Different Signatures</h2>
+        </header>
+        <p>Decorated functions often have a signature where arguments are passed to them. So the arguments will also
+          pass to the decorator function. THe decorator function doesn't necessarily need to do anything with the passed
+          arguments, but it does have to accept them also. The functino signature can be in the form of a single
+          argument, multiple arguments, or a single or multiple keyword argument. It's usually important that the
+          wrapped function inside the decorator function does something with
+          the passed arguments.</p>
+        <p>If the decorator function's argument signature is known and will always be used with decorated functions with
+          the same argument signatures, this is easy to deal with.</p>
+      </section>
+      <section class="main-section"
+               id="Preserving_the_Decorated_Function's_Metadata">
+        <header>
+          <h2>Preserving the Decorated Function's Metadata</h2>
+        </header>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat iste odio sed harum, illo nostrum ad
+          veniam
+          quo temporibus maxime praesentium eos vel, adipisci dolore quam aut voluptatum ipsam error!</p>
+        <p>Lorem ipsum dolor sit, amet consectetur
+        <pre>
+            <code>function someName(){
+              ... 
+              return
+            }</code>
+          </pre>
+        adipisicing elit. Assumenda officiis doloremque velit numquam quo
+        fugit labore autem veniam quisquam nesciunt consectetur iste natus sed ipsum, doloribus ipsam, maxime quae
+        expedita?
+        </p>
+
+      </section>
+      <section class="main-section"
+               id="Using_A_Decorator_With_Arguments">
+        <header>
+          <h2>Using A Decorator With Arguments</h2>
+        </header>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat iste odio sed harum, illo nostrum ad
+          veniam
+          quo temporibus maxime praesentium eos vel, adipisci dolore quam aut voluptatum ipsam error!</p>
+        <p>Lorem ipsum dolor sit, amet consectetur
+        <pre><code>function someName(){
+              ... 
+              return
+          }</code></pre>
+        adipisicing elit. Assumenda officiis doloremque velit numquam quo
+        fugit labore autem veniam quisquam nesciunt consectetur iste natus sed ipsum, doloribus ipsam, maxime quae
+        expedita?
+        </p>
+
+      </section>
+      <section class="main-section"
+               id="References">
+        <header>
+          <h2>References</h2>
+        </header>
+        <p>Based off of:
+        <ul>
+          <li>CPython's
+            <a href="https://docs.python.org/3/glossary.html#term-decorator"
+               target="_blank"
+               rel="noopener noreferrer">decorator definition</a>
+          </li>
+          <li>CPython's
+            <a href="https://docs.python.org/3/whatsnew/2.4.html?highlight=PEP318#pep-318-decorators-for-functions-and-methods"
+               target="_blank"
+               rel="noopener noreferrer">PEP 318: Decorators for Function and Methods</a> documentation
+          </li>
+          <li>
+            <a href="https://www.udemy.com/course/the-modern-python3-bootcamp"
+               target="_blank"
+               rel="noopener noreferrer">Colt Steele's The Modern Python3 Bootcamp</a> section on decorators.
+          </li>
+        </ul>
+        </p>
+      </section>
+
+    </main>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+  </body>
+
+</html>
