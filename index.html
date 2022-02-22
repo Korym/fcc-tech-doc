@@ -23,8 +23,6 @@
          class="nav-link">Decorator Functions Using the '@' Symbol</a>
       <a href="#Decorators_with_Different_Signatures"
          class="nav-link">Decorators with Different Signatures</a>
-      <a href="#Preserving_the_Decorated_Function's_Metadata"
-         class="nav-link">Preserving the Decorated Function's Metadata</a>
       <a href="#Using_A_Decorator_With_Arguments"
          class="nav-link">Using A Decorator With Arguments</a>
       <a href="#References"
@@ -117,8 +115,8 @@
           <h2>Decorator Functions Using the '@' Symbol</h2>
         </header>
         <p>While assigning a function to a variable and calling the variable is obviously valid code, there is a more
-          common way to decorate a function. Use the '@' symbol and the decorator function name above the function to be
-          decorated.
+          common and easier way to decorate a function. Use the '@' symbol and the decorator function name above the
+          function to be decorated.
         <pre class="code">
             <code>
     >>> @decorator
@@ -156,28 +154,61 @@
           wrapped function inside the decorator function does something with
           the passed arguments.</p>
         <p>If the decorator function's argument signature is known and will always be used with decorated functions with
-          the same argument signatures, this is easy to deal with.</p>
-      </section>
-      <section class="main-section"
-               id="Preserving_the_Decorated_Function's_Metadata">
-        <header>
-          <h2>Preserving the Decorated Function's Metadata</h2>
-        </header>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat iste odio sed harum, illo nostrum ad
-          veniam
-          quo temporibus maxime praesentium eos vel, adipisci dolore quam aut voluptatum ipsam error!</p>
-        <p>Lorem ipsum dolor sit, amet consectetur
-        <pre>
-            <code>function someName(){
-              ... 
-              return
-            }</code>
-          </pre>
-        adipisicing elit. Assumenda officiis doloremque velit numquam quo
-        fugit labore autem veniam quisquam nesciunt consectetur iste natus sed ipsum, doloribus ipsam, maxime quae
-        expedita?
-        </p>
+          the same argument signatures, this is easier to deal with. Just make sure that wrapped() has the same argument
+          signature, like below.</p>
 
+        <pre class="code">
+            <code>
+    def even_odd(fn):
+        def wrapped(lst):
+            a=0
+            for i in lst:
+                a += i
+            return a
+        return wrapped
+
+    @even_odd
+    def add(lst):
+        pass
+
+    print(add([1,2,3,4,5,6,7,8,9,10]))
+    # 55
+            </code>
+          </pre>
+        <p>
+          To get the wrapped function to take different function signatures, use *args and **kwargs.
+        <pre class="code"
+             style="margin-bottom: 0;">
+            <code>
+    def shout(fn):
+        def wrapped(*args, **kwargs):
+            return fn(*args, **kwargs).upper()
+        return wrapped
+
+
+    @shout
+    def greet(name):
+        return f"Hi I'm, {name}"
+
+    @shout
+    def order(main, side):
+        return f"I'd like a {main} and a side of {side}"
+
+    @shout
+    def bad_neigbor(name, pet, area):
+        return f"Hey {name}, please keep your {pet} out of my {area}"
+
+    print(greet("Jeff"))  #HI I'M, JEFF
+    print(order("burger", "fries")) #I'D LIKE A BURGER AND A SIDE OF FRIES
+    print(bad_neigbor(name="Mom", pet="husband", area="bathroom")) #HEY MOM, PLEASE KEEP YOUR HUSBAND OUT OF MY BATHROOM
+            </code>
+          </pre>
+        <small>Some examples taken from <a href="https://www.udemy.com/course/the-modern-python3-bootcamp"
+             target="_blank"
+             rel="noopener noreferrer">Colt Steele's The Modern Python3 Bootcamp</a></small>
+        </p>
+        <p>In this example, all three functions (greet, order and bad_neighbor) use the same decorator function(shout)
+          even though they all have different argument signatures.</p>
       </section>
       <section class="main-section"
                id="Using_A_Decorator_With_Arguments">
