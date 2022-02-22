@@ -23,6 +23,8 @@
          class="nav-link">Decorator Functions Using the '@' Symbol</a>
       <a href="#Decorators_with_Different_Signatures"
          class="nav-link">Decorators with Different Signatures</a>
+      <a href="#Preserving_the_Decorated_Function's_Metadata"
+         class="nav-link">Preserving the Decorated Function's Metadata</a>
       <a href="#Using_A_Decorator_With_Arguments"
          class="nav-link">Using A Decorator With Arguments</a>
       <a href="#References"
@@ -72,8 +74,9 @@
             </code>
           </pre>
         <p>As seen in the above example, a decorator function (in this case <code>decorator()</code>) accepts a
-          seperate function, the decorat<em>ed</em> function <code>decorated()</code>. The decorator contains another
-          function that is a wrapped function that modifies the decorated function. It's important to understand that
+          seperate function, the decorat<em>ed</em> function <code>decorated()</code>. The decorator contains an inner
+          function (wrapped) that has access to and can modify the decorated function, which must then be returned to
+          the decorated function to use . It's important to understand that
           the decorator function returns a function object which still needs to be executed later.</p>
         <p>
           Calling decorated() prints out it's message.
@@ -156,27 +159,45 @@
         <p>If the decorator function's argument signature is known and will always be used with decorated functions with
           the same argument signatures, this is easier to deal with. Just make sure that wrapped() has the same argument
           signature, like below.</p>
+        <p>
+          In the following example, the add() function accepts a list of numbers, iterates over the list and returns all
+          of
+          the numbers in the list added together.
+        </p>
+        <p>
+          The decorator function acts as a filter, only returning the even numbers from the list, which are then added
+          in the add() decorated function.
+        </p>
 
         <pre class="code">
             <code>
-    def even_odd(fn):
+    def evens(fn):
         def wrapped(lst):
-            a=0
+            new_lst = []
             for i in lst:
-                a += i
-            return a
+                if i%2==0:
+                    new_lst.append(i)
+            return fn(new_lst) #need to return the passed function and argument
         return wrapped
-
-    @even_odd
+    
+    lst = [1,2,3,4,5,6,7,8,9,10]
+    
+    @evens
     def add(lst):
-        pass
+        a=0
+        for i in lst:
+            a+=i
+        return a
 
-    print(add([1,2,3,4,5,6,7,8,9,10]))
-    # 55
+    print(add(lst)) 
+    # with @evens, returns 30
+    # without @evens, returns 55
             </code>
           </pre>
-        <p>
-          To get the wrapped function to take different function signatures, use *args and **kwargs.
+
+        <p>Sometimes there are multiple functions that would benefit from a decorator function, but they may have
+          different argument signatures. To get the wrapped function to take different function signatures, use *args
+          and **kwargs.
         <pre class="code"
              style="margin-bottom: 0;">
             <code>
@@ -207,8 +228,40 @@
              target="_blank"
              rel="noopener noreferrer">Colt Steele's The Modern Python3 Bootcamp</a></small>
         </p>
-        <p>In this example, all three functions (greet, order and bad_neighbor) use the same decorator function(shout)
-          even though they all have different argument signatures.</p>
+        <p>In this example, all three functions (greet, order and bad_neighbor) use the same decorator function even
+          though they all have different argument signatures.</p>
+      </section>
+      <section class="main-section"
+               id="Preserving_the_Decorated_Functions's_Metadata">
+        <header>
+          <h2>Preserving the Decorated Function's Metadata</h2>
+        </header>
+        Because of the way decorators work, whan a function is passed to the decorator, the decorated function's
+        meta-data is included. This includes __name__() and __docs__() methods. Because of this, a problem occurs when
+        trying to call the decorated function's meta-data methods, it will actually be in refernce to the decorator
+        function, not the decorated function. For example, calling __name__ for bad_neigbor() function above displays:
+        <pre class="code">
+          <code>
+      print(bad_neigbor.__name__) # wrapped
+          </code>
+        </pre>
+        <p>The easiest way to fix this is using the functools module, and calling the 'wraps' decorator function. Then
+          decorate the 'wrapped' inner function with the @wraps decorator. However the decorated function must be passed
+          to the wraps decorator also. Then when calling the decorated function's meta-data the correct information will
+          be displayed.</p>
+
+        <pre class="code">
+          <code>
+    from functools import wraps
+    def shout(fn):
+        @wraps(fn)  # Must pass fn to wraps
+        def wrapped(*args, **kwargs):
+            return fn(*args, **kwargs).upper()
+        return wrapped
+
+    print(bad_neighbor.__name__) #bad_neighbor
+          </code>
+        </pre>
       </section>
       <section class="main-section"
                id="Using_A_Decorator_With_Arguments">
