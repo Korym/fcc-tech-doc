@@ -101,11 +101,11 @@
           as a function.
         <pre class="code">
             <code>
-    >>> decorated = decorator(decorated)
-    >>> decorated()
-    Inside the decorator function
-    Calling the decorated function
-    Still inside the decorator function
+    decorated = decorator(decorated)
+    decorated()
+    # Inside the decorator function
+    # Calling the decorated function
+    # Still inside the decorator function
             </code>
           </pre>
         </p>
@@ -150,21 +150,19 @@
           function to be decorated.
         <pre class="code">
             <code>
-    >>> @decorator
-    ... def decorated():
-    ...     print("Calling the decorated function")
-          </code>
+    @decorator
+    def decorated():
+        print("Calling the decorated function")</code>
         </pre>
         </p>
         <p>
           Now all that needs to be done is to call the decorated() function, and the rest is done automatically.
         <pre class="code">
             <code>
-    >>> decorated()
-    Inside the decorator function
-    Calling the decorated function
-    Still inside the decorator function
-            </code>
+    decorated()
+    # Inside the decorator function
+    # Calling the decorated function
+    # Still inside the decorator function</code>
           </pre>
         </p>
         <p>
@@ -270,8 +268,7 @@
         function, not the decorated function. For example, calling __name__ for bad_neigbor() function above displays:
         <pre class="code">
           <code>
-      print(bad_neigbor.__name__) # wrapped
-          </code>
+    print(bad_neigbor.__name__) # wrapped</code>
         </pre>
         <p>The easiest way to fix this is using the functools module, and calling the 'wraps' decorator function. Then
           decorate the 'wrapped' inner function with the @wraps decorator. However the decorated function must be passed
@@ -287,8 +284,7 @@
             return fn(*args, **kwargs).upper()
         return wrapped
 
-    print(bad_neighbor.__name__) #bad_neighbor
-          </code>
+    print(bad_neighbor.__name__) #bad_neighbor</code>
         </pre>
       </section>
       <section class="main-section"
@@ -301,30 +297,30 @@
           previous section. Passing an argument to a decorator can also be done both as a function assignment or using
           the @ symbol.
         </p>
-        <p>As seen previously in the <a href="#Decorators_As_Functions"
-             class="nav-link">Decorators As Functions</a> section, decorating a function without the @ symbol looks like
+        <p>As seen previously in the <a href="#Decorators_As_Functions">Decorators As Functions</a> section, decorating
+          a function without the @ symbol looks like
           this:
         <pre class="code">
              <code>
-      def fn():
-          pass
-          
-      fn = decorator(fn)</code>
+    def fn():
+        pass
+        
+    fn = decorator(fn)</code>
             </pre>
         Since that's the case, then when passing an argument to the decorator as in this basic example:
         <pre class="code">
           <code>
-      @decorator(val)
-      def fn():
-          pass</code>
+    @decorator(val)
+    def fn():
+        pass</code>
         </pre>
         will then be the same as
         <pre class="code">
           <code>
-      def fn():
-          pass
-        
-      fn = decorator(val)(fn)</code>
+    def fn():
+        pass
+      
+    fn = decorator(val)(fn)</code>
         </pre>
         </p>
         <p>
@@ -333,12 +329,12 @@
           definition and the wrapper function definition.
         <pre class="code">
           <code>
-      def decorator(val):
-          def inner(fn):
-              def wrapper(*args, **kwargs):
-                  # do something
-              return wrapper
-          return inner</code>
+    def decorator(val):
+        def inner(fn):
+            def wrapper(*args, **kwargs):
+                # do something
+            return wrapper
+        return inner</code>
           </pre>
         </p>
 
