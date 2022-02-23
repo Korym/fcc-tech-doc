@@ -11,12 +11,11 @@ p{
   margin-bottom: 15px;
   margin-top:15px;
 }
-.main-section{
-  margin-bottom: 30px;
+
+li{
+  list-style-type: none;
 }
-.code{
-  background-color: #000;
-}
+
 code {
   background-color: #000;
   color:#fff;
@@ -24,6 +23,12 @@ code {
   font-family: courier, monospace;
   padding: 2px 5px;
   font-size: 0.9rem;
+}
+.main-section{
+  margin-bottom: 30px;
+}
+.code{
+  background-color: #000;
 }
 
 @media screen and (min-width:800px){
