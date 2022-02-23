@@ -268,17 +268,50 @@
         <header>
           <h2>Using A Decorator With Arguments</h2>
         </header>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat iste odio sed harum, illo nostrum ad
-          veniam
-          quo temporibus maxime praesentium eos vel, adipisci dolore quam aut voluptatum ipsam error!</p>
-        <p>Lorem ipsum dolor sit, amet consectetur
-        <pre><code>function someName(){
-              ... 
-              return
-          }</code></pre>
-        adipisicing elit. Assumenda officiis doloremque velit numquam quo
-        fugit labore autem veniam quisquam nesciunt consectetur iste natus sed ipsum, doloribus ipsam, maxime quae
-        expedita?
+        <p>
+          Sometimes an argument needs to be passed to the decorator, for example the @wraps(fn) decorator in the
+          previous section. Passing an argument to a decorator can also be done both as a function assignment or using
+          the @ symbol.
+        </p>
+        <p>As seen previously in the <a href="#Decorators_As_Functions"
+             class="nav-link">Decorators As Functions</a> section, decorating a function without the @ symbol looks like
+          this:
+        <pre class="code">
+             <code>
+      def fn():
+          pass
+          
+      fn = decorator(fn)</code>
+            </pre>
+        Since that's the case, then when passing an argument to the decorator as in this basic example:
+        <pre class="code">
+          <code>
+      @decorator(val)
+      def fn():
+          pass</code>
+        </pre>
+        will then be the same as
+        <pre class="code">
+          <code>
+      def fn():
+          pass
+        
+      fn = decorator(val)(fn)</code>
+        </pre>
+        </p>
+        <p>
+          Adding the ability to pass an argument to a decorator is slightly more complicated and
+          requires an additional function layer in the decorator function that is between the decorator function
+          definition and the wrapper function definition.
+        <pre class="code">
+          <code>
+      def decorator(val):
+          def inner(fn):
+              def wrapper(*args, **kwargs):
+                  # do something
+              return wrapper
+          return inner</code>
+          </pre>
         </p>
 
       </section>
