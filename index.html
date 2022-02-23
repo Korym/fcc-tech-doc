@@ -41,7 +41,7 @@
              href="https://docs.python.org/3/whatsnew/2.4.html?highlight=PEP318#pep-318-decorators-for-functions-and-methods"
              target="_blank"
              rel="noopener noreferrer">PEP 318: Decorators for Functions and Methods</a>, a <dfn
-               title="decorator">decorator</dfn> is a function that wraps (or returns) another function, usually used
+               title="decorator">decorator</dfn> is a function that wraps another function, usually used
           for enhancing the wrapped function's behavior.
         </p>
         <p>The decorator was added because developers were requesting easier access to create static methods and
@@ -57,21 +57,19 @@
           <h2>Decorators As Functions</h2>
         </header>
         <p>A decorator is an example of a higher-order function. It takes another function as an argument and then
-          wither returns that same fuction modified, or returns another object that is a result of the decorator
-          function and the modified function.</p>
+          either returns that same fuction, or returns another, new object.</p>
         <p>The following is an example of a decorator function and a function to be modified:</p>
         <pre class="code">
             <code id="decorator_function">
-    >>> def decorator(fn):
-    ...     def wrapped():
-    ...         print("Inside the decorator function")
-    ...         fn() #call the passed in function
-    ...         print("Still inside the decorator function")
-    ...     return wrapped
+    def decorator(fn):
+        def wrapped():
+            print("Inside the decorator function")
+            fn() #call the passed in function
+            print("Still inside the decorator function")
+        return wrapped
 
-    >>> def decorated():
-    ...      print("Calling the decorated function")
-            </code>
+    def decorated():
+        print("Calling the decorated function")</code>
           </pre>
         <p>As seen in the above example, a decorator function (in this case <code>decorator()</code>) accepts a
           seperate function, the decorat<em>ed</em> function <code>decorated()</code>. The decorator contains an inner
@@ -82,17 +80,18 @@
           Calling decorated() prints out it's message.
         <pre class="code">
             <code>
-    >>> decorated()
-    Calling the decorated function
+    decorated()
+    # Calling the decorated function
             </code>
           </pre>
         </p>
         <p>
-          Calling decorator with decorated as the argument just returns a function object.
+          Calling decorator with decorated as the argument just returns a function object, which then needs to be called
+          itself.
         <pre class="code">
             <code>
-    >>> decorator(decorated)
-    < function decorator.< locals>.wrapped at 0x000001B62CA131C0>
+    decorator(decorated)
+    # < function decorator.< locals>.wrapped at 0x000001B62CA131C0>
             </code>
           </pre>
         </p>
@@ -108,6 +107,35 @@
     Calling the decorated function
     Still inside the decorator function
             </code>
+          </pre>
+        </p>
+        <p>
+          In another example the decorated function takes a list of numbers, adds them together and displays a value.
+          Adding a decorator function which accepts the add() function and the list argument, filters the list for even
+          numbers only and then returns the function object to be called later. The new object then adds only the even
+          numbers from the list and displays a different value.
+        <pre class="code">
+            <code>
+    def evens(fn):
+        def wrapped(lst):
+            new_lst = []
+            for i in lst:
+                if i % 2 == 0:
+                    new_lst.append(i)
+            return fn(new_lst)
+        return wrapped
+
+    lst = [1,2,3,4,5,6,7,8,9,10]
+
+    def add(lst):
+        a = 0
+        for i in lst:
+            a += i
+        return a # 55
+
+    # decorate the add() function with the evens decorator
+    add = evens(add) 
+    print(add(lst)) # 30</code>
           </pre>
         </p>
 
